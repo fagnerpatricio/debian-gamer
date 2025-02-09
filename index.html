@@ -11,21 +11,42 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
+    /* Base styling */
+    :root {
+      --bg-color-light: #f0f0f0;       /* fundo cinza claro */
+      --text-color-light: #333333;     /* texto no modo claro */
+
+      --bg-color-dark: #1c1c1c;        /* fundo modo escuro */
+      --text-color-dark: #cccccc;      /* texto no modo escuro */
+      --link-color-dark: #66b2ff;
+
+      --container-max-width: 1024px;
+
+      --font-primary: 'Roboto Slab', serif;
+    }
+
+    /* Toggle dark mode by adding/removing .dark-mode no <body> */
     body {
-      background-color: #fefefe;
       margin: 0;
       padding: 0;
-      font-family: 'Roboto Slab', serif;
+      font-family: var(--font-primary);
+      background-color: var(--bg-color-light);
+      color: var(--text-color-light);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body.dark-mode {
+      background-color: var(--bg-color-dark);
+      color: var(--text-color-dark);
     }
 
     .container {
-      max-width: 1024px;
+      max-width: var(--container-max-width);
       margin: 0 auto;
       padding: 20px;
     }
 
     h1, h2, h3 {
-      color: #333;
       margin-top: 1.25rem;
       margin-bottom: 0.75rem;
     }
@@ -33,13 +54,11 @@
     p {
       line-height: 1.6;
       margin-bottom: 1rem;
-      color: #444;
     }
 
     ul {
       margin-bottom: 1rem;
       padding-left: 20px;
-      color: #444;
     }
 
     li {
@@ -62,15 +81,12 @@
       overflow-x: auto;
     }
 
-    code {
-      font-family: monospace;
+    body.dark-mode pre {
+      background: #2b2b2b;
     }
 
-    .highlight {
-      background-color: #ffe;
-      border-left: 3px solid #ccc;
-      padding: 6px;
-      margin: 10px 0;
+    code {
+      font-family: monospace;
     }
 
     a {
@@ -78,13 +94,34 @@
       text-decoration: none;
     }
 
+    body.dark-mode a {
+      color: var(--link-color-dark);
+    }
+
     a:hover {
       text-decoration: underline;
+    }
+
+    .toggle-dark-mode {
+      display: inline-block;
+      padding: 8px 16px;
+      background: #999;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+
+    .toggle-dark-mode:hover {
+      background: #666;
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <button class="toggle-dark-mode" onclick="toggleDarkMode()">Alternar Modo Escuro</button>
+
     <h1>🎮 Configurar MangoHud e GameMode no Debian</h1>
     <p>
       Este tutorial ensina como ativar <strong>MangoHud</strong> (overlay de FPS) e <strong>GameMode</strong> (otimização de desempenho)
@@ -111,13 +148,11 @@ sudo apt install mangohud mangohud:i386 gamemode gamemode:i386</code></pre>
     <h2>📌 2) Encontrando os binários e bibliotecas</h2>
     <p>É útil saber onde o <em>MangoHud</em> e o <em>GameMode</em> foram instalados.</p>
 
-    <div class="highlight">
-      <strong>Onde está o binário do MangoHud?</strong>
-      <pre><code>which mangohud</code></pre>
+    <p><strong>Onde está o binário do MangoHud?</strong></p>
+    <pre><code>which mangohud</code></pre>
 
-      <strong>Onde está o binário do GameMode?</strong>
-      <pre><code>which gamemoded</code></pre>
-    </div>
+    <p><strong>Onde está o binário do GameMode?</strong></p>
+    <pre><code>which gamemoded</code></pre>
 
     <p><strong>Encontrando as bibliotecas do MangoHud:</strong></p>
     <pre><code>find /usr -name "libMangoHud.so*"</code></pre>
@@ -220,5 +255,11 @@ source ~/.bashrc</code></pre>
       Agora é só aproveitar seus jogos com <strong>monitoramento de FPS</strong> e <strong>otimização de desempenho</strong>! 🎮🚀
     </p>
   </div>
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+  </script>
 </body>
 </html>

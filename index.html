@@ -1,174 +1,219 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tutorial: Configurar MangoHud e GameMode no Debian</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 20px;
       background-color: #fefefe;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
     }
+
+    .container {
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
     h1, h2, h3 {
       color: #333;
+      margin-top: 1.25rem;
+      margin-bottom: 0.75rem;
     }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      color: #444;
+    }
+
+    ul {
+      margin-bottom: 1rem;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+      color: #444;
+    }
+
+    hr {
+      margin: 2rem 0;
+      border: 0;
+      border-top: 1px solid #ccc;
+    }
+
     pre {
       background: #f4f4f4;
       padding: 10px;
       border-radius: 5px;
       font-size: 0.9rem;
       white-space: pre-wrap;
+      margin-bottom: 1rem;
+      overflow-x: auto;
     }
+
     code {
       font-family: monospace;
     }
+
     .highlight {
       background-color: #ffe;
       border-left: 3px solid #ccc;
       padding: 6px;
       margin: 10px 0;
     }
+
     a {
       color: #007acc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <h1>🎮 Configurar MangoHud e GameMode no Debian</h1>
+    <p>
+      Este tutorial ensina como ativar <strong>MangoHud</strong> (overlay de FPS) e <strong>GameMode</strong> (otimização de desempenho)
+      em jogos nativos do Linux e na Steam (<em>Proton/Wine</em>) em sistemas baseados em <strong>Debian</strong>.
+    </p>
 
-  <h1>🎮 Configurar MangoHud e GameMode no Debian</h1>
-  <p>
-    Este tutorial ensina como ativar <strong>MangoHud</strong> (overlay de FPS) e <strong>GameMode</strong> (otimização de desempenho)
-    em jogos nativos do Linux e na Steam (<em>Proton/Wine</em>) em sistemas baseados em <strong>Debian</strong>.
-  </p>
+    <hr />
 
-  <hr>
+    <h2>📌 1) Instalando MangoHud e GameMode</h2>
+    <p>Primeiro, precisamos instalar os pacotes 32-bit e 64-bit. Abra um terminal e rode:</p>
 
-  <h2>📌 1) Instalando MangoHud e GameMode</h2>
-  <p>Primeiro, precisamos instalar os pacotes 32-bit e 64-bit. Abra um terminal e rode:</p>
-
-  <pre><code>sudo dpkg --add-architecture i386
+    <pre><code>sudo dpkg --add-architecture i386
 sudo apt update
 sudo apt install mangohud mangohud:i386 gamemode gamemode:i386</code></pre>
 
-  <p>Isso instala:</p>
-  <ul>
-    <li><strong>MangoHud</strong> (overlay de FPS) para jogos 32-bit e 64-bit</li>
-    <li><strong>GameMode</strong> (otimizador de desempenho) para jogos 32-bit e 64-bit</li>
-  </ul>
+    <p>Isso instala:</p>
+    <ul>
+      <li><strong>MangoHud</strong> (overlay de FPS) para jogos 32-bit e 64-bit</li>
+      <li><strong>GameMode</strong> (otimizador de desempenho) para jogos 32-bit e 64-bit</li>
+    </ul>
 
-  <hr>
+    <hr />
 
-  <h2>📌 2) Encontrando os binários e bibliotecas</h2>
-  <p>É útil saber onde o <em>MangoHud</em> e o <em>GameMode</em> foram instalados.</p>
+    <h2>📌 2) Encontrando os binários e bibliotecas</h2>
+    <p>É útil saber onde o <em>MangoHud</em> e o <em>GameMode</em> foram instalados.</p>
 
-  <div class="highlight">
-    <strong>Onde está o binário do MangoHud?</strong>
-    <pre><code>which mangohud</code></pre>
+    <div class="highlight">
+      <strong>Onde está o binário do MangoHud?</strong>
+      <pre><code>which mangohud</code></pre>
 
-    <strong>Onde está o binário do GameMode?</strong>
-    <pre><code>which gamemoded</code></pre>
-  </div>
+      <strong>Onde está o binário do GameMode?</strong>
+      <pre><code>which gamemoded</code></pre>
+    </div>
 
-  <p><strong>Encontrando as bibliotecas do MangoHud:</strong></p>
-  <pre><code>find /usr -name "libMangoHud.so*"</code></pre>
+    <p><strong>Encontrando as bibliotecas do MangoHud:</strong></p>
+    <pre><code>find /usr -name "libMangoHud.so*"</code></pre>
 
-  <p><strong>Encontrando as bibliotecas do GameMode:</strong></p>
-  <pre><code>find /usr -name "libgamemodeauto.so*"</code></pre>
+    <p><strong>Encontrando as bibliotecas do GameMode:</strong></p>
+    <pre><code>find /usr -name "libgamemodeauto.so*"</code></pre>
 
-  <p>Esses comandos ajudam a localizar arquivos como:</p>
-  <ul>
-    <li>/usr/lib/x86_64-linux-gnu/mangohud/libMangoHud.so (64-bit)</li>
-    <li>/usr/lib/i386-linux-gnu/mangohud/libMangoHud.so (32-bit)</li>
-    <li>/lib/x86_64-linux-gnu/libgamemodeauto.so.0 (64-bit)</li>
-    <li>/lib/i386-linux-gnu/libgamemodeauto.so.0 (32-bit)</li>
-  </ul>
+    <p>Esses comandos ajudam a localizar arquivos como:</p>
+    <ul>
+      <li>/usr/lib/x86_64-linux-gnu/mangohud/libMangoHud.so (64-bit)</li>
+      <li>/usr/lib/i386-linux-gnu/mangohud/libMangoHud.so (32-bit)</li>
+      <li>/lib/x86_64-linux-gnu/libgamemodeauto.so.0 (64-bit)</li>
+      <li>/lib/i386-linux-gnu/libgamemodeauto.so.0 (32-bit)</li>
+    </ul>
 
-  <hr>
+    <hr />
 
-  <h2>📌 3) Configuração para Jogos 64-bit com Vulkan (Proton/Wine)</h2>
-  <p>Caso seu jogo <em>Steam/Proton</em> seja <strong>64-bit</strong> e use <strong>Vulkan</strong>, abra a <em>Steam</em> e:</p>
-  <ol>
-    <li>Vá até <strong>Biblioteca</strong></li>
-    <li><strong>Clique com o botão direito no jogo → Propriedades</strong></li>
-    <li>Na aba <em>"Geral"</em>, em <em>"Opções de Inicialização"</em>, cole:</li>
-  </ol>
+    <h2>📌 3) Configuração para Jogos 64-bit com Vulkan (Proton/Wine)</h2>
+    <p>Caso seu jogo <em>Steam/Proton</em> seja <strong>64-bit</strong> e use <strong>Vulkan</strong>:</p>
+    <ol>
+      <li>Vá até <strong>Biblioteca</strong></li>
+      <li><strong>Clique com o botão direito no jogo → Propriedades</strong></li>
+      <li>Na aba <em>"Geral"</em>, em <em>"Opções de Inicialização"</em>, cole:</li>
+    </ol>
 
-  <pre><code>LD_PRELOAD=/lib/x86_64-linux-gnu/libgamemodeauto.so.0 MANGOHUD=1 gamemoderun %command%</code></pre>
+    <pre><code>LD_PRELOAD=/lib/x86_64-linux-gnu/libgamemodeauto.so.0 MANGOHUD=1 gamemoderun %command%</code></pre>
 
-  <ul>
-    <li><strong>LD_PRELOAD</strong> injeta o GameMode (64-bit).</li>
-    <li><strong>MANGOHUD=1</strong> ativa o MangoHud.</li>
-    <li><strong>gamemoderun</strong> garante o uso do GameMode.</li>
-    <li><strong>%command%</strong> executa o comando original do jogo.</li>
-  </ul>
+    <ul>
+      <li><strong>LD_PRELOAD</strong> injeta o GameMode (64-bit).</li>
+      <li><strong>MANGOHUD=1</strong> ativa o MangoHud.</li>
+      <li><strong>gamemoderun</strong> garante o uso do GameMode.</li>
+      <li><strong>%command%</strong> executa o comando original do jogo.</li>
+    </ul>
 
-  <hr>
+    <hr />
 
-  <h2>📌 4) Configuração para Jogos 32-bit com OpenGL (Nativo do Linux)</h2>
-  <p>Se for um jogo <strong>nativo</strong> do Linux, usando <strong>OpenGL</strong> e for <strong>32-bit</strong>, faça:</p>
-  <ol>
-    <li>Abra a <em>Steam</em> → <strong>Biblioteca</strong></li>
-    <li><strong>Clique com o botão direito no jogo → Propriedades</strong></li>
-    <li>Na aba <em>"Geral"</em>, em <em>"Opções de Inicialização"</em>, cole:</li>
-  </ol>
+    <h2>📌 4) Configuração para Jogos 32-bit com OpenGL (Nativo do Linux)</h2>
+    <p>Se for um jogo <strong>nativo</strong> do Linux, usando <strong>OpenGL</strong> e for <strong>32-bit</strong>, faça:</p>
+    <ol>
+      <li>Abra a <em>Steam</em> → <strong>Biblioteca</strong></li>
+      <li><strong>Clique com o botão direito no jogo → Propriedades</strong></li>
+      <li>Na aba <em>"Geral"</em>, em <em>"Opções de Inicialização"</em>, cole:</li>
+    </ol>
 
-  <pre><code>LD_PRELOAD=/usr/lib/i386-linux-gnu/mangohud/libMangoHud.so:/lib/i386-linux-gnu/libgamemodeauto.so.0 mangohud --dlsym gamemoderun %command%</code></pre>
+    <pre><code>LD_PRELOAD=/usr/lib/i386-linux-gnu/mangohud/libMangoHud.so:/lib/i386-linux-gnu/libgamemodeauto.so.0 mangohud --dlsym gamemoderun %command%</code></pre>
 
-  <ul>
-    <li><strong>LD_PRELOAD</strong> define a biblioteca 32-bit do MangoHud e do GameMode.</li>
-    <li><strong>mangohud --dlsym</strong> melhora compatibilidade com OpenGL.</li>
-    <li><strong>gamemoderun</strong> ativa o GameMode.</li>
-  </ul>
+    <ul>
+      <li><strong>LD_PRELOAD</strong> define a biblioteca 32-bit do MangoHud e GameMode.</li>
+      <li><strong>mangohud --dlsym</strong> melhora compatibilidade com OpenGL.</li>
+      <li><strong>gamemoderun</strong> ativa o GameMode.</li>
+    </ul>
 
-  <hr>
+    <hr />
 
-  <h2>📌 5) Configuração para Jogos 64-bit com OpenGL (Nativo do Linux)</h2>
-  <p>Para jogos <strong>nativos</strong> do Linux, <strong>OpenGL</strong> e <strong>64-bit</strong>, use:</p>
+    <h2>📌 5) Configuração para Jogos 64-bit com OpenGL (Nativo do Linux)</h2>
+    <p>Para jogos <strong>nativos</strong> do Linux, <strong>OpenGL</strong> e <strong>64-bit</strong>:</p>
 
-  <pre><code>LD_PRELOAD=/usr/lib/x86_64-linux-gnu/mangohud/libMangoHud.so:/lib/x86_64-linux-gnu/libgamemodeauto.so.0 mangohud --dlsym gamemoderun %command%</code></pre>
+    <pre><code>LD_PRELOAD=/usr/lib/x86_64-linux-gnu/mangohud/libMangoHud.so:/lib/x86_64-linux-gnu/libgamemodeauto.so.0 mangohud --dlsym gamemoderun %command%</code></pre>
 
-  <p>A lógica é a mesma, mas usando as bibliotecas 64-bit.</p>
+    <p>A lógica é a mesma, mas usando bibliotecas 64-bit.</p>
 
-  <hr>
+    <hr />
 
-  <h2>📌 6) Testando Manualmente</h2>
-  <p><strong>Antes</strong> de configurar na Steam, teste no terminal para ver se MangoHud e GameMode funcionam. Exemplos:</p>
+    <h2>📌 6) Testando Manualmente</h2>
+    <p><strong>Antes</strong> de configurar na Steam, teste no terminal para ver se MangoHud e GameMode funcionam:</p>
 
-  <p><strong>Para um jogo 64-bit com Vulkan:</strong></p>
-  <pre><code>LD_PRELOAD=/lib/x86_64-linux-gnu/libgamemodeauto.so.0 MANGOHUD=1 gamemoderun glxgears</code></pre>
+    <p><strong>Para um jogo 64-bit com Vulkan:</strong></p>
+    <pre><code>LD_PRELOAD=/lib/x86_64-linux-gnu/libgamemodeauto.so.0 MANGOHUD=1 gamemoderun glxgears</code></pre>
 
-  <p><strong>Para um jogo 32-bit com OpenGL:</strong></p>
-  <pre><code>LD_PRELOAD=/usr/lib/i386-linux-gnu/mangohud/libMangoHud.so:/lib/i386-linux-gnu/libgamemodeauto.so.0 mangohud --dlsym gamemoderun glxgears</code></pre>
+    <p><strong>Para um jogo 32-bit com OpenGL:</strong></p>
+    <pre><code>LD_PRELOAD=/usr/lib/i386-linux-gnu/mangohud/libMangoHud.so:/lib/i386-linux-gnu/libgamemodeauto.so.0 mangohud --dlsym gamemoderun glxgears</code></pre>
 
-  <p>Se o overlay do MangoHud aparecer e você não receber erros, significa que está tudo certo!</p>
+    <p>Se o overlay do MangoHud aparecer e você não receber erros, significa que está tudo certo!</p>
 
-  <hr>
+    <hr />
 
-  <h2>📌 7) Ativar MangoHud e GameMode Globalmente</h2>
-  <p>Para não precisar configurar cada jogo manualmente, você pode ativar <em>MangoHud</em> e <em>GameMode</em> globalmente. Edite o arquivo <code>~/.bashrc</code>:</p>
+    <h2>📌 7) Ativar MangoHud e GameMode Globalmente</h2>
+    <p>Para não precisar configurar cada jogo manualmente, você pode ativar <em>MangoHud</em> e <em>GameMode</em> globalmente. Edite o arquivo <code>~/.bashrc</code>:</p>
 
-  <pre><code>echo 'export MANGOHUD=1' >> ~/.bashrc
+    <pre><code>echo 'export MANGOHUD=1' >> ~/.bashrc
 echo 'export LD_PRELOAD=/lib/x86_64-linux-gnu/libgamemodeauto.so.0' >> ~/.bashrc
 source ~/.bashrc</code></pre>
 
-  <p>Agora, sempre que iniciar um jogo, o MangoHud e o GameMode estarão ativos (para 64 bits, no exemplo acima). Para 32 bits, você teria que ajustar o caminho para <code>/usr/lib/i386-linux-gnu/mangohud/libMangoHud.so:/lib/i386-linux-gnu/libgamemodeauto.so.0</code> ou configurar manualmente cada jogo que for 32-bit.</p>
+    <p>Dessa forma, sempre que iniciar um jogo, o MangoHud e o GameMode estarão ativos (para 64 bits). Para 32 bits, você poderia ajustar o <code>LD_PRELOAD</code> no <code>.bashrc</code> ou configurar manualmente cada jogo.</p>
 
-  <hr>
+    <hr />
 
-  <h2>✅ Conclusão</h2>
-  <p>
-    Pronto! Agora você tem o <strong>MangoHud</strong> (para exibir FPS e estatísticas) e o <strong>GameMode</strong> (para otimização de desempenho)
-    funcionando no seu sistema Debian. Lembre-se de:
-  </p>
-  <ul>
-    <li>Instalar os pacotes 32-bit se quiser rodar jogos 32-bit com MangoHud e GameMode.</li>
-    <li>Verificar o caminho correto das bibliotecas (<code>LD_PRELOAD</code>) para cada arquitetura (32/64-bit).</li>
-    <li>Testar manualmente antes de configurar na Steam, usando <code>glxgears</code> ou outro executável simples.</li>
-  </ul>
+    <h2>✅ Conclusão</h2>
+    <p>
+      Pronto! Agora você tem o <strong>MangoHud</strong> (para exibir FPS e estatísticas) e o <strong>GameMode</strong> (para otimização de desempenho)
+      funcionando no seu sistema Debian. Lembre-se de:
+    </p>
+    <ul>
+      <li>Instalar os pacotes 32-bit se quiser rodar jogos 32-bit.</li>
+      <li>Verificar o caminho correto das bibliotecas (<code>LD_PRELOAD</code>) para cada arquitetura (32/64-bit).</li>
+      <li>Testar manualmente antes de configurar na Steam, usando <code>glxgears</code> ou outro executável simples.</li>
+    </ul>
 
-  <p>Agora é só jogar com <strong>monitoramento de FPS</strong> e <strong>otimização de desempenho</strong> ativos! 🎮🚀</p>
+    <p>
+      Agora é só aproveitar seus jogos com <strong>monitoramento de FPS</strong> e <strong>otimização de desempenho</strong>! 🎮🚀
+    </p>
 
+  </div>
 </body>
 </html>
